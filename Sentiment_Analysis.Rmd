@@ -1,0 +1,105 @@
+---
+title: "Hotel Review Sentiment Analysis"
+author: "Baraka Kautsar Sofiuddin"
+date: "2023-07-11"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+## Importing Libraries
+```{r}
+library(pacman)
+p_load(pacman,qdap,ggplot2,forcats,tidyverse,dplyr,tidyr,ggthemes, wordcloud, stringr,tidytext, psych)
+```
+## Importing Dataset
+The dataset used in this project can be found at <https://www.kaggle.com/datasets/andrewmvd/trip-advisor-hotel-reviews>
+
+### Reading dataset
+
+```{r}
+hotelReview <- read.csv("tripadvisor_hotel_reviews.csv")
+head(hotelReview)
+```
+## Exploring The Data
+
+### Overview & Review Data Deepdive
+```{r}
+describe(hotelReview)
+#characters
+hotelReview%>%
+  summarize(mean_character = mean(nchar(Review)), median_character = median(nchar(Review)))
+#words
+hotelReview%>%
+  summarize(mean_words = mean(str_count(string = Review,pattern = '\\S+')), median_words = median(str_count(string = Review,pattern = '\\S+')))
+
+most_common_word = freq_terms(text.var=hotelReview$Review,top=25,stopwords =
+                                c(Top200Words,tm::stopwords("english"),"hotel","room","stay","n't"))
+  
+ggplot(most_common_word,aes(x = fct_reorder(WORD, FREQ, .desc=FALSE),y=FREQ))+
+  geom_bar(stat = "identity",fill = "steelblue")+
+  xlab("Word")+
+  ylab("Frequency")+
+  theme_classic()+
+  coord_flip()
+```
+### Rating Data
+```{r}
+table(hotelReview$Rating)
+ggplot(data=hotelReview,aes(x=Rating))+
+  geom_bar(fill='sienna')
+```
+
+## Sentiment Analysis
+
+### Word Lexicon
+```{r, warning=FALSE}
+pos_neg = hotelReview%>%
+            select(Review)%>%
+            unnest_tokens(output = word, input = Review)%>%
+            inner_join(get_sentiments('bing'))
+head(pos_neg)
+ggplot(pos_neg,aes(x=sentiment,fill=sentiment))+
+  geom_bar()+
+  guides(fill = F)
+options(scipen=999)
+```
+### sentiment proportion for each rating category
+```{r}
+rating_sentiment = 
+  hotelReview %>%
+    select(Review,Rating)%>%
+    unnest_tokens(output=word,input=Review)%>%
+    inner_join(get_sentiments('bing'))%>%
+    group_by(Rating,sentiment)%>%
+    summarize(amount = n())%>%
+    mutate(proportion = amount/sum(amount))
+
+rating_sentiment %>%
+  ggplot(aes(x=Rating,y=proportion,fill=sentiment))+
+  geom_col()
+```
+## Word Cloud
+```{r}
+wordcloudData = 
+  hotelReview%>%
+  select(Review)%>%
+  unnest_tokens(output=word,input=Review)%>%
+  anti_join(stop_words)%>%
+  inner_join(get_sentiments('bing'))%>%
+  count(sentiment,word,sort=T)%>%
+  spread(key=sentiment,value = n,fill=0)%>%
+  data.frame()
+rownames(wordcloudData) = wordcloudData[,'word']
+wordcloudData = wordcloudData[,c('positive','negative')]
+
+set.seed(42)
+comparison.cloud(term.matrix = wordcloudData,scale = c(2,0.5),max.words = 200, rot.per=0)
+```
+
+```{r}
+p_unload(all)
+```
+
+

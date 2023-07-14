@@ -1,0 +1,28 @@
+{
+    "id": "E423DF60",
+    "path": "~/Desktop/R Programs/Personal Project/Sentiment_Analysis.Rmd",
+    "project_path": "Sentiment_Analysis.Rmd",
+    "type": "r_markdown",
+    "hash": "387088233",
+    "contents": "",
+    "dirty": false,
+    "created": 1689047657060.0,
+    "source_on_save": true,
+    "relative_order": 4,
+    "properties": {
+        "tempName": "Untitled1",
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "11,6",
+        "scrollLine": "0",
+        "last_setup_crc32": "9efcd85bb338d19"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1689320600,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1689320600580,
+    "read_only": false,
+    "read_only_alternatives": []
+}

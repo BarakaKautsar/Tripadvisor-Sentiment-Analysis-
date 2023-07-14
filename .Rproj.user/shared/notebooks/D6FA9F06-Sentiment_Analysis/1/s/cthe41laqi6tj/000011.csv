@@ -1,0 +1,3 @@
+"0","#characters"
+"0","hotelReview%>%"
+"0","  summarize(mean_character = mean(nchar(Review)), median_character = median(nchar(Review)))"

@@ -1,0 +1,6 @@
+"0","pos_neg = hotelReview%>%"
+"0","            select(Review)%>%"
+"0","            unnest_tokens(output = word, input = Review)%>%"
+"0","            inner_join(get_sentiments('bing'))"
+"2","Joining with `by = join_by(word)`"
+"0","head(pos_neg)"
