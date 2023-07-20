@@ -2,7 +2,8 @@
 title: "Hotel Review Sentiment Analysis"
 author: "Baraka Kautsar Sofiuddin"
 date: "2023-07-11"
-output: html_document
+output:
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
